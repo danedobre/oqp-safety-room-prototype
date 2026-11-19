@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Only Quality People · Prototype</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+body{min-height:100dvh;display:flex;flex-direction:column}
+.page{flex:1;width:100%;max-width:1080px;margin:0 auto;padding:22px 28px 28px;display:flex;flex-direction:column}
+.hero{margin:4px 0 24px;max-width:22em}
+h1{margin:0 0 12px;font-size:clamp(36px,4.8vw,52px);letter-spacing:-.05em;color:var(--ink);font-weight:750;line-height:1.04}
+.sub{margin:0;font-size:18px;color:var(--muted);font-weight:500;line-height:1.5}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+a.tile{display:flex;flex-direction:column;justify-content:space-between;min-height:168px;background:#fff;border-radius:22px;padding:20px 22px 18px;text-decoration:none;color:inherit;box-shadow:var(--shadow-soft);border:1px solid transparent;transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease}
+a.tile:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--blue-soft)}
+a.tile .n{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
+a.tile h2{margin:10px 0 8px;font-size:24px;letter-spacing:-.03em;color:var(--ink)}
+a.tile p{margin:0;font-size:14.5px;color:var(--muted);line-height:1.45;font-weight:500}
+a.tile .go{margin-top:16px;font-size:13px;font-weight:700;color:var(--blue)}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.page{padding:22px 18px}.hero{max-width:none}}
+@media(prefers-reduced-motion:reduce){a.tile:hover{transform:none}}
+</style>
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <a class="logo" href="index.html" aria-label="onlyqualitypeople">
+        <span class="logo-mark">oqp</span>
+        <span class="logo-word">only<b>quality</b>people.</span>
+      </a>
+    </header>
+    <div class="hero">
+      <h1>From paperwork to placement</h1>
+      <p class="sub">A prototype of the safety room, onboarding and consultant desk — built to show Only Quality People what an AI-assisted hiring journey can feel like.</p>
+    </div>
+    <div class="grid">
+      <a class="tile" href="candidate.html">
+        <div><div class="n">01</div><h2>Candidate</h2><p>Safety Essentials induction, assessment and declaration — as a candidate would take it.</p></div>
+        <span class="go">Open the safety room →</span>
+      </a>
+      <a class="tile" href="onboarding.html">
+        <div><div class="n">02</div><h2>Onboarding</h2><p>The Onboarded form, reimagined as a stepper, with safety-room data already filled in.</p></div>
+        <span class="go">Open onboarding →</span>
+      </a>
+      <a class="tile" href="admin.html">
+        <div><div class="n">03</div><h2>Admin</h2><p>The consultant desk: scores, hardest questions, and a review queue in place of the office-use box.</p></div>
+        <span class="go">Open the induction desk →</span>
+      </a>
+      <a class="tile" href="journey.html">
+        <div><div class="n">04</div><h2>Journey</h2><p>How data flows from the safety room to placement, entered once and never typed twice.</p></div>
+        <span class="go">Open the journey →</span>
+      </a>
+    </div>
+  </div>
+  <footer class="credit">Prototype by Grok Bot · Demo only</footer>
+</body>
+</html>

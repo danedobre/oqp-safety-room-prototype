@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Safety Essentials · Only Quality People</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+body{display:flex;flex-direction:column;min-height:100dvh}
+.wrap{flex:1;display:flex;flex-direction:column;align-items:center;padding:22px 20px 36px;width:100%;max-width:760px;margin:0 auto}
+.progress{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;font-weight:600}
+.ring{width:44px;height:44px;display:block}
+.ring circle{fill:none;stroke-width:3.5;transform:rotate(-90deg);transform-origin:50% 50%}
+.ring .track{stroke:var(--line)}
+.ring .val{stroke:var(--blue);stroke-linecap:round;transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1)}
+.progress .meta{display:flex;flex-direction:column;line-height:1.2}
+.progress .meta small{font-weight:500;color:var(--muted);font-size:11px}
+
+.deck{position:relative;width:100%;margin:auto 0}
+.deck .peek{position:absolute;left:4%;right:4%;top:0;height:100%;border-radius:var(--radius);background:#fff;box-shadow:var(--shadow-soft);pointer-events:none}
+.deck .peek.one{transform:translateY(12px) scale(.985);opacity:.95;z-index:0}
+.deck .peek.two{transform:translateY(24px) scale(.97);opacity:.7;z-index:0}
+.scene{position:relative;z-index:2;perspective:1800px}
+.flipper{position:relative;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,0,.2,1)}
+.flipper.is-flipped{transform:rotateY(-180deg)}
+.face{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:26px 36px 28px;min-height:0;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.face.back{position:absolute;inset:0;transform:rotateY(180deg)}
+.face.front{position:relative}
+.face.compact{min-height:0}
+
+.card-bar{position:absolute;left:20px;right:20px;top:10px;height:4px;background:var(--blue-soft);border-radius:99px;overflow:hidden}
+.card-bar span{display:block;height:100%;background:var(--blue);border-radius:99px;min-width:8px;transition:width .45s cubic-bezier(.4,0,.2,1)}
+
+.kicker{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin:14px 0 12px}
+h1,h2{font-weight:700;letter-spacing:-.035em;margin:0 0 14px;line-height:1.15;color:var(--ink)}
+h1{font-size:clamp(28px,4.4vw,40px)}
+h2{font-size:clamp(24px,3.6vw,32px)}
+.lead,.prose{font-size:16.5px;line-height:1.55;color:var(--ink);margin:0 0 14px}
+.prose p{margin:0 0 12px}
+.prose p:last-child{margin:0}
+.muted{color:var(--muted)}
+.slogan{font-weight:700;color:var(--ink);letter-spacing:-.03em;margin:18px 0 0;font-size:16px}
+.list{margin:8px 0 0;padding:0;list-style:none;display:grid;gap:10px}
+.list li{position:relative;padding-left:18px;font-size:15.5px;line-height:1.45}
+.list li:before{content:"";position:absolute;left:0;top:.55em;width:7px;height:7px;border-radius:50%;background:var(--blue)}
+.steps{margin:6px 0 0;padding:0;list-style:none;display:grid;gap:12px}
+.steps li{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;font-size:15.5px;line-height:1.45}
+.steps .n{width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+.prompt{font-size:clamp(26px,3.6vw,40px);font-weight:700;letter-spacing:-.035em;line-height:1.2;color:var(--ink);margin:4px 0 22px}
+.choices{display:grid;gap:10px;margin-top:4px}
+.choices.tf{grid-template-columns:1fr 1fr}
+.choice{appearance:none;border:1px solid var(--line);background:#fff;border-radius:16px;padding:16px 18px;font-size:17px;font-weight:650;color:var(--ink);text-align:left;cursor:pointer;transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;box-shadow:0 1px 0 rgba(21,34,56,.03)}
+.choices.tf .choice{text-align:center;padding:20px 16px;font-size:20px}
+.choice:hover{border-color:var(--blue);transform:translateY(-1px);box-shadow:var(--shadow-soft)}
+.choice:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.choice:disabled{cursor:default;transform:none}
+
+.field{display:flex;flex-direction:column;gap:8px;margin:22px 0 28px}
+.field label{font-size:13px;font-weight:650;color:var(--muted)}
+.field input[type=text]{border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:18px;font-weight:600;color:var(--ink);background:#fff;letter-spacing:-.02em}
+.field input:focus{outline:2px solid var(--blue);outline-offset:2px;border-color:transparent}
+.ack{display:flex;align-items:flex-start;gap:12px;margin-top:auto;padding-top:8px;cursor:pointer;user-select:none}
+.ack input{appearance:none;width:22px;height:22px;margin:1px 0 0;border:1.5px solid var(--blue);border-radius:6px;background:#fff;display:grid;place-items:center;flex:none;cursor:pointer;transition:background .15s ease}
+.ack input:checked{background:var(--blue)}
+.ack input:checked:after{content:"";width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);display:block;margin-bottom:2px}
+.ack span{font-size:15px;line-height:1.4;font-weight:600;color:var(--ink)}
+.hint{font-size:13px;color:var(--muted);margin:16px 0 0;font-weight:500}
+.tap{margin-top:auto;padding-top:20px;font-size:13px;color:var(--muted);font-weight:600;letter-spacing:.02em}
+
+.check-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.78);border-radius:var(--radius);opacity:0;pointer-events:none;z-index:5}
+.check-overlay.show{opacity:1}
+.check-burst{position:relative;width:96px;height:96px}
+.check-burst .rip{position:absolute;inset:0;border-radius:50%;border:2px solid var(--ok);opacity:0}
+.check-overlay.show .rip{animation:rip .7s cubic-bezier(.2,.7,.2,1) forwards}
+.check-burst svg{width:96px;height:96px;display:block;transform:scale(.7);opacity:0}
+.check-overlay.show svg{animation:pop .55s cubic-bezier(.2,1.4,.3,1) forwards}
+@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes rip{0%{transform:scale(.6);opacity:.7}100%{transform:scale(1.55);opacity:0}}
+.check-burst path{fill:none;stroke:var(--ok);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40}
+.check-overlay.show path{animation:draw .45s .12s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+.explain{display:flex;flex-direction:column;flex:1}
+.explain .status{display:flex;align-items:center;gap:10px;margin:0 0 16px}
+.explain .status svg{width:28px;height:28px;flex:none}
+.explain h2{margin:0}
+.panel{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:14px;margin:0 0 10px}
+.panel svg{width:22px;height:22px;flex:none;margin-top:1px}
+.panel .lbl{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin:0 0 2px}
+.panel .val{font-size:16px;font-weight:650;line-height:1.35}
+.panel.you{background:var(--bad-bg);color:var(--bad-ink)}
+.panel.right{background:var(--ok-bg);color:var(--ok-ink);border:1.5px solid #B7E4C7;padding:16px 16px}
+.panel.right .val{font-size:18px;font-weight:750}
+.why{font-size:16px;line-height:1.5;margin:8px 0 20px}
+.ack.fancy{background:var(--blue-mist);border-radius:14px;padding:14px 16px;margin-top:auto;border:1px solid var(--blue-soft)}
+.ack.fancy input{width:24px;height:24px;border-radius:7px;border-width:2px}
+
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:8px 0 22px}
+.metric{background:var(--blue-mist);border-radius:16px;padding:16px 18px}
+.metric .num{font-size:32px;font-weight:750;letter-spacing:-.04em;color:var(--ink);line-height:1}
+.metric .num small{font-size:16px;font-weight:600;margin-left:.2em;color:var(--muted)}
+.metric .lbl{font-size:12px;font-weight:650;color:var(--muted);margin-top:6px}
+.scorewrap{display:flex;align-items:center;gap:24px;margin:4px 0 20px}
+.score-ring{width:132px;height:132px;flex:none}
+.score-ring circle{fill:none;stroke-width:10;transform:rotate(-90deg);transform-origin:50% 50%}
+.bigscore{font-size:42px;font-weight:750;letter-spacing:-.05em;color:var(--ink);line-height:1}
+.bigscore small{font-size:18px;font-weight:600;margin-left:.2em;color:var(--muted)}
+.acks{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.acks li{padding:12px 0;border-top:1px solid var(--line);font-size:14.5px;line-height:1.45}
+.acks li:first-child{border-top:0}
+.acks strong{display:block;color:var(--ink);margin-bottom:2px}
+.stamp{margin-top:18px;font-size:13px;color:var(--muted);font-weight:600}
+
+.declare .legal{font-size:14.5px;line-height:1.45;color:var(--ink)}
+.declare .legal p{margin:0 0 8px}
+.sigbox{border:1px solid var(--line);border-radius:16px;background:#fff;overflow:hidden;margin:8px 0 8px}
+.sigbox canvas{display:block;width:100%;height:96px;touch-action:none;cursor:crosshair}
+.sigbar{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-top:1px solid var(--line);background:var(--blue-mist)}
+.sigbar button,.texty{background:none;border:0;color:var(--blue);font-size:12px;font-weight:700;cursor:pointer;padding:4px}
+.typed{width:100%;border:0;border-top:1px solid var(--line);padding:16px;font-size:28px;font-style:italic;font-weight:500;color:var(--ink)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.timeline{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:0}
+.timeline li{display:grid;grid-template-columns:20px 1fr;gap:14px;position:relative;padding:0 0 18px}
+.timeline li:before{content:"";position:absolute;left:9px;top:18px;bottom:0;width:1.5px;background:var(--line)}
+.timeline li:last-child{padding-bottom:0}
+.timeline li:last-child:before{display:none}
+.dot{width:20px;height:20px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 4px var(--blue-soft);position:relative;z-index:1}
+.timeline h3{margin:0 0 2px;font-size:15px;color:var(--ink)}
+.timeline p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.45}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.admin-link{margin-top:22px;font-size:13px}
+.admin-link a{color:var(--muted);font-weight:600;text-decoration:none;border-bottom:1px solid var(--line)}
+.admin-link a:hover{color:var(--ink)}
+
+@media(max-width:520px){
+  .wrap{padding:18px 16px 36px}
+  .face{padding:22px 20px 22px;min-height:0}
+  .prompt{font-size:26px;margin-bottom:18px}
+  .choices.tf{gap:10px}
+  .metrics,.row2{grid-template-columns:1fr}
+  .scorewrap{flex-direction:column;align-items:flex-start}
+}
+@media(prefers-reduced-motion:reduce){
+  .flipper{transition:none}
+  .choice,.btn,.ring .val,.check-burst svg,.check-burst .rip,.check-burst path{transition:none;animation:none}
+  .check-overlay.show svg{transform:none;opacity:1}
+  .check-overlay.show path{stroke-dashoffset:0}
+}
+@media print{
+  body{background:#fff}
+  .site-header .aside,footer.credit,.admin-link,.actions .btn.ghost,.peek,.card-bar{display:none!important}
+  .face,.flipper,.scene,.deck{box-shadow:none;transform:none!important;position:static}
+  .wrap{max-width:none}
+}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="site-header">
+      <a class="logo" href="index.html" aria-label="onlyqualitypeople">
+        <span class="logo-mark">oqp</span>
+        <span class="logo-word">only<b>quality</b>people.</span>
+      </a>
+      <div class="aside">
+      <div class="progress" id="prog" hidden>
+        <svg class="ring" viewBox="0 0 44 44" aria-hidden="true">
+          <circle class="track" cx="22" cy="22" r="18"></circle>
+          <circle class="val" cx="22" cy="22" r="18" id="ringVal"></circle>
+        </svg>
+        <div class="meta">
+          <span id="progNum"></span>
+          <small id="progLabel"></small>
+        </div>
+      </div>
+      </div>
+    </header>
+
+    <div class="deck" id="deck">
+      <div class="peek two" id="peek2"></div>
+      <div class="peek one" id="peek1"></div>
+      <div class="scene">
+        <div class="flipper" id="flipper">
+          <div class="face front" id="front"></div>
+          <div class="face back" id="back"></div>
+        </div>
+        <div class="check-overlay" id="check" aria-hidden="true">
+          <div class="check-burst">
+            <div class="rip"></div>
+            <svg viewBox="0 0 86 86">
+              <circle cx="43" cy="43" r="40" fill="#E7F6EE" stroke="#1F7A4D" stroke-width="3"></circle>
+              <path d="M26 44 l12 12 22-24"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="credit">Prototype by Grok Bot · Demo only — nothing is stored or sent</footer>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const CIRC = 2 * Math.PI * 18;
+
+const INDUCTION = [
+  {
+    kicker: "Employee induction",
+    title: "Welcome to Only Quality People",
+    html: `
+      <div class="prose">
+        <p>Welcome to Only Quality People (OQP).</p>
+        <p>At OQP, safety is everyone’s responsibility. Every employee represents Only Quality People while working at our clients’ sites. The way we work reflects our values, our professionalism and our commitment to safety.</p>
+        <p>Whether you’re working in a warehouse, distribution centre, manufacturing facility or transport operation, your actions matter. By following safe work practices, speaking up when something doesn’t look right and looking after those around you, you help create a safer workplace for everyone.</p>
+        <p><strong>No deadline, production target or shortcut is ever more important than your safety.</strong></p>
+      </div>
+      <p class="slogan">Every Shift. Every Site. Every Person.</p>`
+  },
+  {
+    kicker: "Employee induction",
+    title: "Your Safety Responsibilities",
+    html: `
+      <p class="lead">As an OQP employee, you are expected to:</p>
+      <ul class="list">
+        <li>Follow all workplace rules, procedures and site instructions.</li>
+        <li>Wear the required Personal Protective Equipment (PPE) and only operate equipment you are trained and authorised to use.</li>
+        <li>Use safe manual handling techniques and remain alert around forklifts, vehicles and moving equipment.</li>
+        <li>Keep your work area clean and report hazards, incidents, near misses or damaged equipment immediately.</li>
+        <li>Arrive fit for work and treat everyone with professionalism and respect.</li>
+      </ul>`
+  },
+  {
+    kicker: "Employee induction",
+    title: "Common Workplace Hazards",
+    html: `
+      <p class="lead">Common hazards include:</p>
+      <ul class="list">
+        <li>Operating forklifts and mobile plant</li>
+        <li>Manual handling and repetitive lifting</li>
+        <li>Slips, trips and falls</li>
+        <li>Falling objects</li>
+        <li>Loading and unloading activities</li>
+        <li>Hazardous chemicals</li>
+        <li>Heat stress and fatigue</li>
+        <li>Poor housekeeping and unsafe workplace behaviours</li>
+      </ul>
+      <p class="lead" style="margin-top:16px">Recognising hazards early and reporting them helps prevent injuries and creates a safer workplace for everyone.</p>`
+  },
+  {
+    kicker: "Employee induction",
+    title: "STOP · ASK · REPORT",
+    html: `
+      <p class="lead">If something doesn’t look right:</p>
+      <ol class="steps">
+        <li><span class="n">1</span><div><strong>STOP</strong> — Pause the task if you believe it is unsafe.</div></li>
+        <li><span class="n">2</span><div><strong>ASK</strong> — Seek guidance from your supervisor or site representative.</div></li>
+        <li><span class="n">3</span><div><strong>REPORT</strong> — Report hazards, incidents and near misses immediately.</div></li>
+      </ol>
+      <p class="slogan">Speaking up today could prevent an injury tomorrow.</p>`
+  },
+  {
+    kicker: "Employee induction",
+    title: "Emergency Preparedness",
+    html: `
+      <p class="lead">Before starting work, make sure you know:</p>
+      <ul class="list">
+        <li>Emergency exits &amp; Evacuation assembly area</li>
+        <li>First aid equipment</li>
+        <li>Emergency procedures</li>
+        <li>Who to report emergencies to</li>
+      </ul>
+      <p class="lead" style="margin-top:16px">Remain calm during an emergency and always follow site procedures and the instructions of authorised personnel.</p>`
+  }
+];
+
+const GATES = {
+  A: {
+    kicker: "Safety assessment",
+    title: "Part A · True or false",
+    body: "Sixteen short statements on the safety principles you have just read. Tap a card to begin, or it will start on its own.",
+    total: 16
+  },
+  B: {
+    kicker: "Safety assessment",
+    title: "Part B · Multiple choice",
+    body: "Ten questions. Choose the one most appropriate answer for each.",
+    total: 10
+  },
+  M: {
+    kicker: "Manual handling essentials",
+    title: "Safe manual handling",
+    body: "",
+    html: `
+      <div class="prose">
+        <p>Manual handling includes lifting, lowering, carrying, pushing, pulling and moving items by hand or bodily force. Always follow site procedures and assess the task before moving a load.</p>
+      </div>
+      <ol class="steps">
+        <li><span class="n">1</span><div><strong>Assess</strong> — Check the load’s weight, size, shape, stability and grip. Do not guess your capacity.</div></li>
+        <li><span class="n">2</span><div><strong>Plan</strong> — Clear the route, check the destination and look for trip hazards, obstacles and pinch points.</div></li>
+        <li><span class="n">3</span><div><strong>Get help / use an aid</strong> — Use a trolley, pallet jack or other approved aid where suitable. Ask for help with heavy, bulky, unstable or awkward loads.</div></li>
+        <li><span class="n">4</span><div><strong>Position</strong> — Stand close, feet stable and balanced. Keep the load close to your body.</div></li>
+        <li><span class="n">5</span><div><strong>Lift smoothly</strong> — Bend at the hips and knees, keep your back in a comfortable neutral position and use your legs.</div></li>
+        <li><span class="n">6</span><div><strong>Move safely</strong> — Keep the load close and in view. Do not twist your back; turn by moving your feet. Walk — do not rush.</div></li>
+        <li><span class="n">7</span><div><strong>Lower &amp; report</strong> — Lower in a controlled way. Stop if unsafe or in pain, and report hazards, discomfort, injuries and near misses.</div></li>
+      </ol>
+      <p class="slogan">STOP · ASK · REPORT — never force a lift or continue through pain.</p>`,
+    total: 6,
+    ack: true
+  }
+};
+
+const QUESTIONS = [
+  {id:"A1",part:"A",kind:"tf",prompt:"Every OQP employee has a responsibility to help maintain a safe workplace.",answer:"True",reason:"Every employee has an important role in maintaining a safe workplace."},
+  {id:"A2",part:"A",kind:"tf",prompt:"You should only operate equipment if you have been trained, authorised and deemed competent.",answer:"True",reason:"Only operate equipment you are trained, authorised and deemed competent to use."},
+  {id:"A3",part:"A",kind:"tf",prompt:"It is acceptable to ignore a hazard and fail to report it.",answer:"False",reason:"If you identify a hazard, report it immediately. You will always be supported for making the safe decision."},
+  {id:"A4",part:"A",kind:"tf",prompt:"Wearing the required Personal Protective Equipment (PPE) is an important part of working safely.",answer:"True",reason:"Required PPE is an important part of working safely."},
+  {id:"A5",part:"A",kind:"tf",prompt:"Near misses should always be reported to ensure they are investigated asap.",answer:"True",reason:"Near misses should always be reported so they can be investigated."},
+  {id:"A6",part:"A",kind:"tf",prompt:"Forklift operators can always see pedestrians around them.",answer:"False",reason:"Forklift operators cannot always see pedestrians around them. Remain alert around mobile plant."},
+  {id:"A7",part:"A",kind:"tf",prompt:"Good housekeeping helps prevent slips, trips and falls.",answer:"True",reason:"Good housekeeping helps prevent slips, trips and falls."},
+  {id:"A8",part:"A",kind:"tf",prompt:"If you feel fatigued or unwell before work, you should notify your supervisor.",answer:"True",reason:"If you feel fatigued or unwell, notify your supervisor before starting work."},
+  {id:"A9",part:"A",kind:"tf",prompt:"Bullying, harassment and inappropriate workplace behaviour can affect workplace safety.",answer:"True",reason:"Bullying, harassment and inappropriate behaviour can affect workplace safety."},
+  {id:"A10",part:"A",kind:"tf",prompt:"Every employee has the authority to stop work if they believe a task is unsafe.",answer:"True",reason:"Every employee has the authority to stop work if they believe a task is unsafe."},
+  {id:"A11",part:"A",kind:"tf",prompt:"Employees should report damaged equipment before using it.",answer:"True",reason:"Stop using damaged equipment and report it before using it."},
+  {id:"A12",part:"A",kind:"tf",prompt:"It is acceptable to take shortcuts if they help complete the job faster.",answer:"False",reason:"No deadline, production target or shortcut is ever more important than your safety."},
+  {id:"A13",part:"A",kind:"tf",prompt:"You should know the location of emergency exits and assembly areas before commencing work.",answer:"True",reason:"Know emergency exits and assembly areas before you start work."},
+  {id:"A14",part:"A",kind:"tf",prompt:"Safe manual handling techniques help reduce the risk of workplace injuries.",answer:"True",reason:"Safe manual handling techniques help reduce the risk of workplace injuries."},
+  {id:"A15",part:"A",kind:"tf",prompt:"Reporting hazards helps prevent future incidents and injuries.",answer:"True",reason:"Reporting hazards early helps prevent future incidents and injuries."},
+  {id:"A16",part:"A",kind:"tf",prompt:"Asking questions when you are unsure is an important part of working safely.",answer:"True",reason:"If you are unsure about a task, stop and ask."},
+  {id:"B1",part:"B",kind:"mc",prompt:"What should you do if you identify a hazard in your work area?",options:[
+    {key:"A",text:"Ignore it if nobody has been injured"},
+    {key:"B",text:"Report it to your supervisor or site representative as soon as possible"},
+    {key:"C",text:"Wait until the end of your shift"},
+    {key:"D",text:"Continue working as normal"}
+  ],answer:"B",reason:"Report a hazard to your supervisor or site representative as soon as possible."},
+  {id:"B2",part:"B",kind:"mc",prompt:"Which of the following is considered a common workplace hazard?",options:[
+    {key:"A",text:"Operating forklifts and other mobile plant"},
+    {key:"B",text:"Office furniture"},
+    {key:"C",text:"Lunchrooms"},
+    {key:"D",text:"Meeting rooms"}
+  ],answer:"A",reason:"Operating forklifts and other mobile plant is a common workplace hazard."},
+  {id:"B3",part:"B",kind:"mc",prompt:"If you are unsure how to complete a task safely, what should you do?",options:[
+    {key:"A",text:"Continue and work it out yourself"},
+    {key:"B",text:"Stop and ask your supervisor or site representative for guidance"},
+    {key:"C",text:"Watch another worker and copy them"},
+    {key:"D",text:"Leave the task unfinished"}
+  ],answer:"B",reason:"If you are unsure, stop and ask your supervisor or site representative for guidance."},
+  {id:"B4",part:"B",kind:"mc",prompt:"Which action helps reduce the risk of manual handling injuries?",options:[
+    {key:"A",text:"Twist while lifting"},
+    {key:"B",text:"Use safe lifting techniques and mechanical aids where available"},
+    {key:"C",text:"Carry as much as possible in one trip"},
+    {key:"D",text:"Lift quickly to finish sooner"}
+  ],answer:"B",reason:"Use safe lifting techniques and mechanical aids where available."},
+  {id:"B5",part:"B",kind:"mc",prompt:"Why are designated pedestrian walkways important?",options:[
+    {key:"A",text:"They help separate pedestrians from moving vehicles and mobile plant"},
+    {key:"B",text:"They shorten walking distances"},
+    {key:"C",text:"They improve housekeeping"},
+    {key:"D",text:"They are only required for visitors"}
+  ],answer:"A",reason:"Walkways help separate pedestrians from moving vehicles and mobile plant."},
+  {id:"B6",part:"B",kind:"mc",prompt:"What should you do if you notice equipment has been damaged?",options:[
+    {key:"A",text:"Continue using it until it stops working"},
+    {key:"B",text:"Stop using it and report it immediately"},
+    {key:"C",text:"Repair it yourself"},
+    {key:"D",text:"Leave it for the next shift"}
+  ],answer:"B",reason:"Stop using damaged equipment and report it immediately."},
+  {id:"B7",part:"B",kind:"mc",prompt:"Which statement best reflects OQP’s approach to safety?",options:[
+    {key:"A",text:"Safety is the supervisor’s responsibility."},
+    {key:"B",text:"Safety is everyone’s responsibility."},
+    {key:"C",text:"Safety only applies when operating machinery."},
+    {key:"D",text:"Productivity always comes before safety."}
+  ],answer:"B",reason:"Safety is everyone’s responsibility."},
+  {id:"B8",part:"B",kind:"mc",prompt:"What should you do if you feel fatigued or unwell before starting work?",options:[
+    {key:"A",text:"Continue working and see how you feel later"},
+    {key:"B",text:"Notify your supervisor before commencing work"},
+    {key:"C",text:"Drink coffee and continue working"},
+    {key:"D",text:"Keep it to yourself"}
+  ],answer:"B",reason:"Notify your supervisor before commencing work if you feel fatigued or unwell."},
+  {id:"B9",part:"B",kind:"mc",prompt:"What is the main purpose of Personal Protective Equipment (PPE)?",options:[
+    {key:"A",text:"To help reduce the risk of injury when hazards cannot be eliminated"},
+    {key:"B",text:"To identify employees"},
+    {key:"C",text:"To replace safe work procedures"},
+    {key:"D",text:"To improve productivity"}
+  ],answer:"A",reason:"PPE helps reduce the risk of injury when hazards cannot be eliminated. It does not replace safe work procedures."},
+  {id:"B10",part:"B",kind:"mc",prompt:"What is the best action if something doesn’t look or feel safe?",options:[
+    {key:"A",text:"Ignore it and continue working"},
+    {key:"B",text:"Ask a workmate what they would do"},
+    {key:"C",text:"Stop, ask questions and report the issue before continuing"},
+    {key:"D",text:"Finish the task as quickly as possible"}
+  ],answer:"C",reason:"If something doesn’t look or feel safe, stop, ask questions and report the issue before continuing."},
+  {id:"M1",part:"M",kind:"tf",prompt:"I should assess the load and clear the route before lifting.",answer:"True",reason:"Assess the load and clear the route before you lift."},
+  {id:"M2",part:"M",kind:"tf",prompt:"Keeping a load close to my body can help reduce strain.",answer:"True",reason:"Keep the load close to your body to help reduce strain."},
+  {id:"M3",part:"M",kind:"tf",prompt:"I should twist my back while carrying a load if it saves time.",answer:"False",reason:"Do not twist your back. Turn by moving your feet."},
+  {id:"M4",part:"M",kind:"tf",prompt:"I should ask for help or use an approved aid if a load is too heavy or awkward.",answer:"True",reason:"Ask for help or use an approved aid if a load is too heavy, bulky or awkward."},
+  {id:"M5",part:"M",kind:"tf",prompt:"I should lift smoothly and turn by moving my feet rather than twisting my back.",answer:"True",reason:"Lift smoothly and turn by moving your feet, rather than twisting your back."},
+  {id:"M6",part:"M",kind:"tf",prompt:"I should report pain, hazards and manual-handling incidents to my supervisor.",answer:"True",reason:"Report pain, hazards and manual-handling incidents to your supervisor."}
+];
+
+const PART_LABEL = {A:"Part A",B:"Part B",M:"Manual handling"};
+
+const state = {
+  name: "",
+  i: 0, // induction index 0-4
+  qi: 0,
+  answers: [], // {id, choice, correct, ack?}
+  locked: false,
+  explaining: false,
+  startedAt: null,
+  finishedAt: null,
+  signature: null,
+  typedSig: "",
+  signMode: "draw",
+  autoTimer: null
+};
+
+const params = new URLSearchParams(location.search);
+const shot = params.get("shot");
+const demo = params.has("demo");
+
+
+function cardBar(pct){
+  const w=Math.max(0,Math.min(100,pct));
+  return `<div class="card-bar" aria-hidden="true"><span style="width:${w}%"></span></div>`;
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
+
+function partQ(part){return QUESTIONS.filter(q=>q.part===part)}
+function scoredAnswers(){return state.answers.filter(a=>a.id.startsWith("A")||a.id.startsWith("B"))}
+function mhAnswers(){return state.answers.filter(a=>a.id.startsWith("M"))}
+function scoreAB(){return scoredAnswers().filter(a=>a.correct).length}
+function scoreMH(){return mhAnswers().filter(a=>a.correct).length}
+function acks(){return state.answers.filter(a=>a.ack)}
+function competent(){return scoreAB()===26 && scoreMH()===6}
+
+function choiceLabel(q, key){
+  if(q.kind==="tf") return key;
+  const o=q.options.find(x=>x.key===key);
+  return o? (o.key+". "+o.text) : key;
+}
+
+function setProgress(current, total, label){
+  const el=$("prog");
+  if(!total){el.hidden=true;return}
+  el.hidden=false;
+  $("progNum").textContent = current + " of " + total;
+  $("progLabel").textContent = label || "";
+  const circ=CIRC;
+  const val=$("ringVal");
+  val.style.strokeDasharray = circ;
+  val.style.strokeDashoffset = circ * (1 - (current/total));
+}
+$("ringVal").style.strokeDasharray = CIRC;
+$("ringVal").style.strokeDashoffset = CIRC;
+
+function showPeeks(on){
+  $("peek1").style.display = $("peek2").style.display = on? "block":"none";
+}
+
+function paint(el, html){
+  el.innerHTML = html;
+  el.classList.toggle("compact", /class="(declare|explain)"/.test(html) || html.includes("Assessment summary") || html.includes("Thank you"));
+}
+
+/* ---------- Faces ---------- */
+function introHTML(){
+  return `
+    <p class="kicker">Safety Essentials</p>
+    <h1>Employee Induction &amp; Assessment</h1>
+    <p class="lead muted">A digital safety room — the same paperwork, designed to feel effortless. Read the induction, complete the assessment, then sign your declaration.</p>
+    <div class="field">
+      <label for="candName">Candidate name</label>
+      <input id="candName" type="text" autocomplete="name" placeholder="Your full name" value="${esc(state.name)}">
+    </div>
+    <button class="btn" id="beginBtn" type="button">Begin induction</button>
+    <p class="hint">Demo only. Nothing is stored or sent.</p>`;
+}
+
+function inductionHTML(idx){
+  const c=INDUCTION[idx];
+  return `
+    ${cardBar(((idx+1)/INDUCTION.length)*100)}
+    <p class="kicker">${c.kicker} · ${idx+1} of ${INDUCTION.length}</p>
+    <h2>${c.title}</h2>
+    ${c.html}
+    <label class="ack" style="margin-top:24px">
+      <input type="checkbox" id="readAck">
+      <span>I’ve read this</span>
+    </label>`;
+}
+
+function gateHTML(key){
+  const g=GATES[key];
+  if(g.ack){
+    return `
+      ${cardBar(0)}
+      <p class="kicker">${g.kicker}</p>
+      <h2>${g.title}</h2>
+      ${g.html}
+      <label class="ack">
+        <input type="checkbox" id="readAck">
+        <span>I’ve read this</span>
+      </label>`;
+  }
+  return `
+    ${cardBar(0)}
+    <p class="kicker">${g.kicker}</p>
+    <h2>${g.title}</h2>
+    <p class="lead">${g.body}</p>
+    <p class="tap" id="tapBegin">Tap to begin</p>`;
+}
+
+function questionHTML(q){
+  const partQs = partQ(q.part);
+  const n = partQs.findIndex(x=>x.id===q.id)+1;
+  let choices;
+  if(q.kind==="tf"){
+    choices = `<div class="choices tf">
+      <button class="choice" type="button" data-val="True">True</button>
+      <button class="choice" type="button" data-val="False">False</button>
+    </div>`;
+  } else {
+    choices = `<div class="choices">` + q.options.map(o=>
+      `<button class="choice" type="button" data-val="${o.key}">${o.key}. ${esc(o.text)}</button>`
+    ).join("") + `</div>`;
+  }
+  return `
+    ${cardBar((n/partQs.length)*100)}
+    <p class="kicker">${PART_LABEL[q.part]} · ${n} of ${partQs.length}</p>
+    <p class="prompt">${esc(q.prompt)}</p>
+    ${choices}`;
+}
+
+function explainHTML(q, choice){
+  const partQs=partQ(q.part);
+  const n=partQs.findIndex(x=>x.id===q.id)+1;
+  return `
+    ${cardBar((n/partQs.length)*100)}
+    <div class="explain">
+      <p class="kicker">Please review</p>
+      <div class="status">
+        <svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="12" fill="#FCECEC" stroke="#B42318" stroke-width="1.6"/><path d="M10 10 l8 8 M18 10 l-8 8" stroke="#B42318" stroke-width="2" stroke-linecap="round"/></svg>
+        <h2>Not quite</h2>
+      </div>
+      <div class="panel you">
+        <svg viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7.5 7.5 l7 7 M14.5 7.5 l-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <div><p class="lbl">You chose</p><p class="val">${esc(choiceLabel(q,choice))}</p></div>
+      </div>
+      <div class="panel right">
+        <svg viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6.5 11.2 l3 3.1 6-6.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div><p class="lbl">Correct answer</p><p class="val">${esc(choiceLabel(q,q.answer))}</p></div>
+      </div>
+      <p class="why">${esc(q.reason)}</p>
+      <label class="ack fancy">
+        <input type="checkbox" id="understandAck">
+        <span>I’ve read this and understand the correct answer</span>
+      </label>
+    </div>`;
+}
+
+function resultsHTML(){
+  const ab=scoreAB(), mh=scoreMH(), ok=competent();
+  const acknowledged=acks();
+  const circ=2*Math.PI*52;
+  const off=circ*(1-ab/26);
+  const stamp=formatStamp(state.finishedAt || new Date());
+  const list = acknowledged.length? `
+    <h3 style="margin:18px 0 6px;font-size:15px;color:var(--ink)">Questions that needed acknowledgement</h3>
+    <ul class="acks">${acknowledged.map(a=>{
+      const q=QUESTIONS.find(x=>x.id===a.id);
+      return `<li><strong>${a.id} · ${esc(q.prompt)}</strong>You chose ${esc(choiceLabel(q,a.choice))}. The answer is ${esc(choiceLabel(q,q.answer))}. ${esc(q.reason)}</li>`;
+    }).join("")}</ul>` : `<p class="lead" style="margin-top:8px">No acknowledgements needed — every question was answered correctly on the first attempt.</p>`;
+  return `
+    <p class="kicker">Assessment summary</p>
+    <h2>${esc(state.name || "Candidate")}</h2>
+    <div class="scorewrap">
+      <svg class="score-ring" viewBox="0 0 132 132" aria-hidden="true">
+        <circle cx="66" cy="66" r="52" stroke="var(--line)"></circle>
+        <circle cx="66" cy="66" r="52" stroke="var(--navy)" stroke-dasharray="${circ}" stroke-dashoffset="${off}" stroke-linecap="round"></circle>
+      </svg>
+      <div>
+        <div class="bigscore">${ab}<small>/ 26</small></div>
+        <span class="chip ${ok?"ok":"warn"}">${ok?"Competent":"Further training required"}</span>
+        <p class="hint" style="margin-top:8px">Parts A and B, matching the assessment form.</p>
+      </div>
+    </div>
+    <div class="metrics">
+      <div class="metric"><div class="num">${ab}<small>/ 26</small></div><div class="lbl">Safety assessment</div></div>
+      <div class="metric"><div class="num">${mh}<small>/ 6</small></div><div class="lbl">Manual handling</div></div>
+    </div>
+    ${list}
+    <p class="stamp">Completed ${stamp}</p>
+    <div style="margin-top:22px"><button class="btn" type="button" id="toDeclare">Continue to declaration</button></div>`;
+}
+
+function declareHTML(){
+  const today=formatDate(new Date());
+  return `
+    <div class="declare">
+      <p class="kicker">Employee declaration</p>
+      <h2>Congratulations</h2>
+      <div class="legal">
+        <p>Congratulations on completing the OQP Safety Essentials – Employee Induction &amp; Assessment.</p>
+        <p>By signing below, you acknowledge that you have completed this induction, understand the safety expectations outlined within this document and agree to follow all workplace policies, procedures and lawful instructions while representing Only Quality People.</p>
+        <p style="margin-top:16px"><strong>Employee Acknowledgement</strong></p>
+        <p>I acknowledge that I have completed the OQP Safety Essentials – Employee Induction &amp; Assessment and understand the safety responsibilities and expectations outlined in this document.</p>
+        <p>I agree to work safely, comply with workplace procedures and immediately report hazards, incidents and unsafe conditions. I understand that if I am unsure how to perform a task safely, I must stop work and seek guidance before continuing.</p>
+      </div>
+      <div class="row2" style="margin-top:18px">
+        <div class="field" style="margin:0">
+          <label for="decName">Employee name</label>
+          <input id="decName" type="text" value="${esc(state.name)}">
+        </div>
+        <div class="field" style="margin:0">
+          <label>Date</label>
+          <input type="text" value="${esc(today)}" readonly>
+        </div>
+      </div>
+      <div class="field" style="margin:16px 0 8px">
+        <label>Employee signature</label>
+        <div class="sigbox">
+          <canvas id="sigPad" width="800" height="200"></canvas>
+          <input class="typed" id="typedSig" type="text" placeholder="Or type your name" style="display:none" value="${esc(state.typedSig)}">
+          <div class="sigbar">
+            <button type="button" id="sigClear">Clear</button>
+            <button type="button" class="texty" id="sigToggle">Type instead</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">Your consultant will countersign when they review this. Demo only — the signature never leaves this page.</p>
+      <div style="margin-top:18px"><button class="btn" type="button" id="submitBtn" disabled>Submit</button></div>
+    </div>`;
+}
+
+function confirmHTML(){
+  const ab=scoreAB(), ok=competent();
+  const stamp=formatStamp(state.finishedAt || new Date());
+  return `
+    <p class="kicker">Submitted</p>
+    <h2>Thank you, ${esc(firstName(state.name) || "there")}.</h2>
+    <p class="lead">Your induction is with OQP. Here is what happens next.</p>
+    <p style="margin:0 0 16px"><span class="chip ${ok?"ok":"warn"}">${ok?"Marked Competent":"Marked Further training required"}</span>
+      <span style="margin-left:8px;font-weight:650;color:var(--ink)">${ab} / 26</span></p>
+    <ol class="timeline">
+      <li><span class="dot"></span><div><h3>OQP reviews your induction</h3><p>A consultant checks your assessment, acknowledgements and signature.</p></div></li>
+      <li><span class="dot"></span><div><h3>Your result is confirmed</h3><p>${ok?"Competent — you met the assessment standard.":"Further training required — your consultant will be in touch about next steps."}</p></div></li>
+      <li><span class="dot"></span><div><h3>You receive an email copy</h3><p>A record of this induction is sent to you for your files.</p></div></li>
+      <li><span class="dot"></span><div><h3>Your consultant is in touch</h3><p>They’ll confirm next steps for onboarding and any site requirements.</p></div></li>
+    </ol>
+    <div class="actions">
+      <button class="btn" type="button" id="printBtn">Download PDF copy</button>
+      <a class="btn ghost" href="onboarding.html" style="text-decoration:none;display:inline-flex;align-items:center">Continue to onboarding</a>
+    </div>
+    <p class="stamp">Completed ${stamp}</p>
+    <p class="admin-link"><a href="admin.html">View as OQP admin</a></p>`;
+}
+
+function formatDate(d){
+  return d.toLocaleDateString("en-AU",{weekday:"short",day:"numeric",month:"short",year:"numeric",timeZone:"Australia/Sydney"});
+}
+function formatStamp(d){
+  const date=d.toLocaleDateString("en-AU",{day:"numeric",month:"short",year:"numeric",timeZone:"Australia/Sydney"});
+  const time=d.toLocaleTimeString("en-AU",{hour:"numeric",minute:"2-digit",timeZone:"Australia/Sydney"});
+  return date + ", " + time + ", Australia/Sydney";
+}
+function firstName(n){return (n||"").trim().split(/\s+/)[0]||""}
+
+/* ---------- Navigation / flip ---------- */
+let phase = "intro"; // intro, induction, gateA, quiz, gateB, gateM, results, declare, confirm
+let liveEl = $("front");
+let pendingEl = $("back");
+const flipper = $("flipper");
+
+function setLiveHTML(html, bind){
+  paint(liveEl, html);
+  if(bind) bind();
+}
+
+function flipTo(html, bind, after){
+  if(reduce){
+    // swap instantly
+    const tmp=liveEl; liveEl=pendingEl; pendingEl=tmp;
+    // keep front as live visually: just paint front and don't flip
+    liveEl = $("front"); pendingEl=$("back");
+    paint(liveEl, html);
+    if(bind) bind();
+    if(after) after();
+    return;
+  }
+  paint(pendingEl, html);
+  state.locked = true;
+  void flipper.offsetWidth;
+  flipper.classList.add("is-flipped");
+  let finished=false;
+  const done = () => {
+    if(finished) return;
+    finished=true;
+    flipper.removeEventListener("transitionend", onEnd);
+    paint($("front"), pendingEl.innerHTML);
+    flipper.style.transition="none";
+    flipper.classList.remove("is-flipped");
+    void flipper.offsetWidth;
+    flipper.style.transition="";
+    liveEl=$("front"); pendingEl=$("back");
+    paint(pendingEl,"");
+    if(bind) bind();
+    state.locked=false;
+    if(after) after();
+  };
+  const onEnd = (e) => {
+    if(e.propertyName && e.propertyName!=="transform") return;
+    done();
+  };
+  flipper.addEventListener("transitionend", onEnd);
+  setTimeout(done, 700);
+}
+
+function showCheckThen(next){
+  const overlay=$("check");
+  overlay.classList.add("show");
+  const ms = reduce? 200 : 700;
+  setTimeout(()=>{
+    overlay.classList.remove("show");
+    next();
+  }, ms);
+}
+
+/* ---------- Bindings ---------- */
+function bindIntro(){
+  showPeeks(false);
+  setProgress(0,0);
+  const input=$("candName");
+  const btn=$("beginBtn");
+  const sync=()=>{state.name=input.value.trim(); btn.disabled=!state.name};
+  input.addEventListener("input", sync);
+  sync();
+  input.addEventListener("keydown", e=>{ if(e.key==="Enter" && state.name) startInduction(); });
+  btn.addEventListener("click", startInduction);
+}
+
+function startInduction(){
+  if(!state.name) return;
+  state.startedAt = new Date();
+  phase="induction"; state.i=0;
+  showPeeks(true);
+  flipTo(inductionHTML(0), bindInduction);
+  setProgress(1, INDUCTION.length, "Induction");
+}
+
+function bindInduction(){
+  setProgress(state.i+1, INDUCTION.length, "Induction");
+  const box=$("readAck");
+  if(!box) return;
+  box.addEventListener("change", ()=>{
+    if(!box.checked) return;
+    if(state.i < INDUCTION.length-1){
+      state.i++;
+      flipTo(inductionHTML(state.i), bindInduction);
+    } else {
+      phase="gateA";
+      flipTo(gateHTML("A"), bindGateA);
+      setProgress(0,16,"Part A");
+    }
+  });
+}
+
+function bindGateA(){ bindGate("A"); }
+function bindGateB(){ bindGate("B"); }
+function bindGateM(){ bindGate("M"); }
+
+function bindGate(key){
+  clearTimeout(state.autoTimer);
+  showPeeks(true);
+  const g=GATES[key];
+  if(g.ack){
+    setProgress(0, g.total, PART_LABEL[key]);
+    const box=$("readAck");
+    box.addEventListener("change", ()=>{
+      if(!box.checked) return;
+      startPart(key);
+    });
+    return;
+  }
+  setProgress(0, g.total, PART_LABEL[key]);
+  const start=()=>{ clearTimeout(state.autoTimer); startPart(key); };
+  $("front").style.cursor="pointer";
+  $("front").addEventListener("click", start, {once:true});
+  if(!reduce && !shot){
+    state.autoTimer=setTimeout(start, 2600);
+  }
+}
+
+function startPart(key){
+  $("front").style.cursor="";
+  const first = QUESTIONS.findIndex(q=>q.part===key);
+  state.qi=first;
+  phase="quiz";
+  flipTo(questionHTML(QUESTIONS[state.qi]), bindQuestion);
+  updateQuizProgress();
+}
+
+function updateQuizProgress(){
+  const q=QUESTIONS[state.qi];
+  const list=partQ(q.part);
+  const n=list.findIndex(x=>x.id===q.id)+1;
+  setProgress(n, list.length, PART_LABEL[q.part]);
+}
+
+function bindQuestion(){
+  showPeeks(true);
+  updateQuizProgress();
+  state.locked=false;
+  state.explaining=false;
+  document.querySelectorAll(".choice").forEach(btn=>{
+    btn.addEventListener("click", ()=> onAnswer(btn.dataset.val));
+  });
+}
+
+function onAnswer(val){
+  if(state.locked || state.explaining) return;
+  const q=QUESTIONS[state.qi];
+  state.locked=true;
+  document.querySelectorAll(".choice").forEach(b=>b.disabled=true);
+  const correct = val===q.answer;
+  const rec={id:q.id, choice:val, correct, ack:false};
+  if(correct){
+    state.answers.push(rec);
+    showCheckThen(()=> goNextQuestion());
+  } else {
+    rec.ack=false;
+    state._pending = rec;
+    state.explaining=true;
+    flipTo(explainHTML(q,val), bindExplain);
+  }
+}
+
+function bindExplain(){
+  showPeeks(true);
+  const box=$("understandAck");
+  box.addEventListener("change", ()=>{
+    if(!box.checked) return;
+    if(state._pending){ state._pending.ack=true; state.answers.push(state._pending); state._pending=null; }
+    goNextQuestion();
+  });
+}
+
+function goNextQuestion(){
+  const q=QUESTIONS[state.qi];
+  const lastInPart = [...QUESTIONS].reverse().find(x=>x.part===q.part);
+  if(q.id!==lastInPart.id){
+    state.qi++;
+    phase="quiz";
+    flipTo(questionHTML(QUESTIONS[state.qi]), bindQuestion);
+    return;
+  }
+  if(q.part==="A"){ phase="gateB"; flipTo(gateHTML("B"), bindGateB); setProgress(0,10,"Part B"); return; }
+  if(q.part==="B"){ phase="gateM"; flipTo(gateHTML("M"), bindGateM); setProgress(0,6,"Manual handling"); return; }
+  // finished
+  state.finishedAt = new Date();
+  phase="results";
+  showPeeks(false);
+  setProgress(0,0);
+  flipTo(resultsHTML(), bindResults);
+}
+
+function bindResults(){
+  showPeeks(false);
+  $("toDeclare").addEventListener("click", ()=>{
+    phase="declare";
+    flipTo(declareHTML(), bindDeclare);
+  });
+}
+
+function bindDeclare(){
+  showPeeks(false);
+  const name=$("decName");
+  name.addEventListener("input", ()=>{ state.name=name.value.trim(); refreshSubmit(); });
+  setupSignature();
+  $("submitBtn").addEventListener("click", ()=>{
+    if($("submitBtn").disabled) return;
+    if(!state.finishedAt) state.finishedAt=new Date();
+    phase="confirm";
+    flipTo(confirmHTML(), bindConfirm);
+  });
+  refreshSubmit();
+}
+
+function bindConfirm(){
+  showPeeks(false);
+  $("printBtn").addEventListener("click", ()=> window.print());
+}
+
+/* signature pad */
+let drawing=false, hasInk=false;
+function setupSignature(){
+  const canvas=$("sigPad");
+  const typed=$("typedSig");
+  const toggle=$("sigToggle");
+  const clear=$("sigClear");
+  const ctx=canvas.getContext("2d");
+  const ratio=Math.max(window.devicePixelRatio||1, 2);
+  const resize=()=>{
+    const w=canvas.clientWidth || 560;
+    const h=96;
+    canvas.width=Math.round(w*ratio);
+    canvas.height=Math.round(h*ratio);
+    ctx.setTransform(ratio,0,0,ratio,0,0);
+    ctx.lineWidth=2.2;
+    ctx.lineCap="round";
+    ctx.lineJoin="round";
+    ctx.strokeStyle="#0048B2";
+  };
+  resize();
+  const pos=(e)=>{
+    const r=canvas.getBoundingClientRect();
+    const src=e.touches? e.touches[0] : e;
+    return {x:src.clientX-r.left, y:src.clientY-r.top};
+  };
+  const start=(e)=>{e.preventDefault(); drawing=true; const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y);};
+  const move=(e)=>{if(!drawing)return; e.preventDefault(); const p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); hasInk=true; state.signature="draw"; refreshSubmit();};
+  const end=()=>{drawing=false};
+  canvas.addEventListener("pointerdown", start);
+  canvas.addEventListener("pointermove", move);
+  window.addEventListener("pointerup", end);
+  canvas.addEventListener("touchstart", start,{passive:false});
+  canvas.addEventListener("touchmove", move,{passive:false});
+  canvas.addEventListener("touchend", end);
+  clear.addEventListener("click", ()=>{
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    hasInk=false; typed.value=""; state.typedSig=""; state.signature=null; refreshSubmit();
+  });
+  toggle.addEventListener("click", ()=>{
+    const typeMode=typed.style.display==="none";
+    typed.style.display=typeMode?"block":"none";
+    canvas.style.display=typeMode?"none":"block";
+    toggle.textContent=typeMode?"Draw instead":"Type instead";
+    state.signMode=typeMode?"type":"draw";
+    refreshSubmit();
+  });
+  typed.addEventListener("input", ()=>{
+    state.typedSig=typed.value.trim();
+    state.signature = state.typedSig? "type": null;
+    refreshSubmit();
+  });
+}
+function refreshSubmit(){
+  const btn=$("submitBtn");
+  if(!btn) return;
+  const signed = (state.signMode==="type" && state.typedSig) || (state.signMode==="draw" && hasInk);
+  btn.disabled = !(state.name && signed);
+}
+
+/* keyboard */
+document.addEventListener("keydown", (e)=>{
+  if(phase!=="quiz" || state.locked || state.explaining) return;
+  const q=QUESTIONS[state.qi];
+  if(!q) return;
+  const k=e.key.toLowerCase();
+  if(q.kind==="tf"){
+    if(k==="t") onAnswer("True");
+    if(k==="f") onAnswer("False");
+  } else if(["1","2","3","4","a","b","c","d"].includes(k)){
+    const map={1:"A",2:"B",3:"C",4:"D",a:"A",b:"B",c:"C",d:"D"};
+    onAnswer(map[k]);
+  }
+});
+
+/* ---------- Shots / demo deep links ---------- */
+function applyShot(){
+  if(demo && !state.name) state.name="Sam Taylor";
+  if(!shot){
+    setLiveHTML(introHTML(), bindIntro);
+    if(demo && state.name){ $("candName").value=state.name; }
+    return;
+  }
+  showPeeks(true);
+  if(shot==="intro"){ setLiveHTML(introHTML(), bindIntro); showPeeks(false); return; }
+  if(shot==="section"){ phase="gateA"; setLiveHTML(gateHTML("A"), bindGateA); setProgress(0,16,"Part A"); return; }
+  if(shot==="induction"){ phase="induction"; state.i=0; setLiveHTML(inductionHTML(0), bindInduction); setProgress(1,5,"Induction"); return; }
+  if(shot==="question" || shot==="flip"){
+    state.qi = QUESTIONS.findIndex(q=>q.id==="A1");
+    phase="quiz";
+    setLiveHTML(questionHTML(QUESTIONS[state.qi]), bindQuestion);
+    if(shot==="flip"){
+      paint(pendingEl, questionHTML(QUESTIONS[1]));
+      flipper.style.transition="none";
+      flipper.style.transform="rotateY(-72deg)";
+    }
+    return;
+  }
+  if(shot==="explain"){
+    const q=QUESTIONS.find(x=>x.id==="A3");
+    state.qi=QUESTIONS.indexOf(q);
+    phase="quiz"; state.explaining=true;
+    setLiveHTML(explainHTML(q,"True"), bindExplain);
+    return;
+  }
+  if(shot==="results" || shot==="declare" || shot==="confirm"){
+    state.name = state.name || "Sam Taylor";
+    state.finishedAt = new Date();
+    // fictional completed attempt: 24/26 with two acknowledgements, 6/6 MH
+    state.answers = QUESTIONS.map(q=>{
+      if(q.id==="A6") return {id:q.id,choice:"True",correct:false,ack:true};
+      if(q.id==="A12") return {id:q.id,choice:"True",correct:false,ack:true};
+      return {id:q.id,choice:q.answer,correct:true,ack:false};
+    });
+    showPeeks(false);
+    if(shot==="results"){ phase="results"; setLiveHTML(resultsHTML(), bindResults); }
+    if(shot==="declare"){ phase="declare"; setLiveHTML(declareHTML(), bindDeclare); }
+    if(shot==="confirm"){ phase="confirm"; setLiveHTML(confirmHTML(), bindConfirm); }
+    setProgress(0,0);
+    return;
+  }
+  setLiveHTML(introHTML(), bindIntro);
+}
+
+applyShot();
+</script>
+</body>
+</html>

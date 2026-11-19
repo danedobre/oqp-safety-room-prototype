@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Onboarding · Only Quality People</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+body{min-height:100dvh;display:flex;flex-direction:column}
+.page{flex:1;width:100%;max-width:820px;margin:0 auto;padding:24px 20px 40px}
+.carry{background:#fff;border-radius:16px;padding:12px 16px;box-shadow:var(--shadow-soft);display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;font-size:13.5px;line-height:1.45;color:var(--ink)}
+.carry svg{flex:none;margin-top:2px;color:var(--blue)}
+.carry strong{color:var(--ink)}
+.steps{display:flex;gap:0;margin:0 0 16px;overflow:auto;padding:0}
+.steps button{appearance:none;border:0;background:transparent;color:var(--muted);font:inherit;font-size:11.5px;font-weight:700;letter-spacing:.01em;padding:8px 10px;white-space:nowrap;cursor:pointer;border-bottom:2px solid transparent}
+.steps button.on{color:var(--blue);border-bottom-color:var(--blue)}
+.steps button.done{color:var(--ok-ink)}
+.card{background:#fff;border-radius:24px;padding:28px 28px 24px;box-shadow:var(--shadow);min-height:0;display:flex;flex-direction:column}
+.kicker{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin:0 0 8px}
+h1{margin:0 0 18px;font-size:28px;letter-spacing:-.035em;color:var(--ink)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.span{grid-column:1/-1}
+.field label{font-size:12px;font-weight:650;color:var(--muted)}
+.field input,.field select{border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:15px;font-weight:600;color:var(--ink);background:#fff}
+.field input:focus,.field select:focus{outline:2px solid var(--blue);outline-offset:2px;border-color:transparent}
+.field input[readonly]{background:var(--blue-mist)}
+.toggles{display:flex;flex-wrap:wrap;gap:8px}
+.toggle{appearance:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-size:13.5px;font-weight:650;color:var(--ink);cursor:pointer}
+.toggle[aria-pressed="true"]{background:var(--blue);color:#fff;border-color:var(--blue)}
+.docs{display:grid;gap:10px}
+.doc{border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+.doc .ico{width:40px;height:40px;border-radius:10px;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center}
+.doc h3{margin:0;font-size:15px;color:var(--ink)}
+.doc p{margin:3px 0 0;font-size:12.5px;color:var(--ok-ink);font-weight:600}
+.doc.missing p{color:#8A5A12}
+.badge{font-size:11px;font-weight:700;background:var(--ok-bg);color:var(--ok-ink);border-radius:999px;padding:4px 8px}
+.badge.miss{background:#F8EED9;color:#8A5A12}
+.legal{font-size:15px;line-height:1.55}
+.agree{display:flex;align-items:flex-start;gap:10px;margin:12px 0;font-size:14.5px;font-weight:600;cursor:pointer}
+.agree input{margin-top:3px;accent-color:#0048B2}
+.hint{margin-top:auto;padding-top:18px;font-size:13px;color:var(--muted);font-weight:500}
+.ai{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;color:var(--blue)}
+.ai svg{width:12px;height:12px}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.card{padding:22px 18px}}
+</style>
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <a class="logo" href="index.html" aria-label="onlyqualitypeople">
+        <span class="logo-mark">oqp</span>
+        <span class="logo-word">only<b>quality</b>people.</span>
+      </a>
+      <div class="aside"><a class="nav-link" href="index.html">All views</a></div>
+    </header>
+
+    <div class="carry">
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.1 4.2L13.4 7 9.1 8.4 8 14.6 6.9 8.4 2.6 7l4.3-1.4z" fill="currentColor"/></svg>
+      <div>Carried from the safety room — <strong>Sam Taylor</strong>, induction complete, <strong>24 / 26</strong>, declared 19 Nov 2026. Fields already known are prefilled.</div>
+    </div>
+
+    <div class="steps" id="stepper" role="tablist"></div>
+    <div class="card" id="panel"></div>
+  </div>
+  <footer class="credit">Prototype by Grok Bot · Fictional candidate · Demo only, nothing is stored or sent</footer>
+<script>
+const STEPS = ["Personal","Others","Work history","Documents","Medical","Declaration","Payroll"];
+const params=new URLSearchParams(location.search);
+const shot=params.get("shot")||params.get("step");
+const startMap={personal:0,others:1,work:2,documents:3,docs:3,medical:4,declaration:5,payroll:6};
+let step = startMap[(shot||"").toLowerCase()] ?? 0;
+const medical = [
+  "Allergies or sensitivities","Asthma or breathing","Back, neck or joint injury",
+  "Heart or blood pressure","Hearing or vision","Previous workplace injury",
+  "Current medication","Any other condition to declare"
+];
+const medState = medical.map(()=>false);
+const agreed=[true,true,false];
+let autoTimer=null;
+
+const spark = `<span class="ai"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.1 4.2L13.4 7 9.1 8.4 8 14.6 6.9 8.4 2.6 7l4.3-1.4z" fill="currentColor"/></svg> Agent</span>`;
+
+function field(label, value, extra="", name=""){
+  return `<div class="field ${extra}"><label>${label}</label><input type="text" data-req="1" name="${name}" value="${value}"></div>`;
+}
+const docIco=`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>`;
+
+function views(){
+  return [
+    `<p class="kicker">Step 1 of 7</p><h1>Personal information</h1>
+     <div class="grid">
+       ${field("First name","Sam","","first")}
+       ${field("Last name","Taylor","","last")}
+       ${field("Preferred name","Sam","","pref")}
+       ${field("Mobile","0400 000 111","","mobile")}
+       ${field("Email","sam.taylor@email.example","span","email")}
+       ${field("Street address","14 Harbour Lane","span","street")}
+       ${field("Suburb","Newstead","","suburb")}
+       ${field("State / postcode","QLD 4006","","state")}
+     </div>
+     <p class="hint">${spark} · Name carried from the safety-room declaration. Press Enter to continue.</p>`,
+
+    `<p class="kicker">Step 2 of 7</p><h1>Others</h1>
+     <h2 style="font-size:16px;color:var(--ink);margin:0 0 10px">Emergency contact</h2>
+     <div class="grid">
+       ${field("Name","Alex Taylor")}
+       ${field("Relationship","Sister")}
+       ${field("Mobile","0400 000 222","span")}
+     </div>
+     <h2 style="font-size:16px;color:var(--ink);margin:22px 0 10px">Right to work &amp; availability</h2>
+     <div class="grid">
+       ${field("Right to work","Australian citizen")}
+       ${field("Police check","Willing to obtain")}
+       ${field("Availability","Monday–Friday, including early shifts")}
+       ${field("Max travel","30 km")}
+     </div>
+     <p class="hint">Press Enter to continue.</p>`,
+
+    `<p class="kicker">Step 3 of 7</p><h1>Work history</h1>
+     <div class="grid">
+       ${field("Most recent role","Warehouse operative")}
+       ${field("Employer","Northshore Logistics")}
+       ${field("From","Mar 2024")}
+       ${field("To","Current")}
+       ${field("Previous role","Picker packer")}
+       ${field("Employer","Riverbend Fulfilment")}
+     </div>
+     <p class="hint">Fictional history for this prototype. Press Enter to continue.</p>`,
+
+    `<p class="kicker">Step 4 of 7</p><h1>Documents</h1>
+     <div class="docs">
+       <div class="doc"><div class="ico">${docIco}</div><div><h3>NSW Driver Licence</h3><p>Detected · expires Mar 2029</p></div><span class="badge">Read</span></div>
+       <div class="doc"><div class="ico">${docIco}</div><div><h3>White Card (CPC)</h3><p>Detected · expires Nov 2027</p></div><span class="badge">Read</span></div>
+       <div class="doc"><div class="ico">${docIco}</div><div><h3>High Risk Work — Forklift (LF)</h3><p>Detected · expires Jul 2028</p></div><span class="badge">Read</span></div>
+       <div class="doc"><div class="ico">${docIco}</div><div><h3>Medicare card</h3><p>Detected</p></div><span class="badge">Read</span></div>
+       <div class="doc missing"><div class="ico">${docIco}</div><div><h3>Proof of ID — passport or birth certificate</h3><p>Still needed</p></div><span class="badge miss">Flagged</span></div>
+     </div>
+     <p class="hint">${spark} · Reads the uploaded licence and prefills its expiry. Missing items are flagged. Press Enter to continue.</p>`,
+
+    `<p class="kicker">Step 5 of 7</p><h1>Medical disclosure</h1>
+     <p class="hint" style="margin-top:0;margin-bottom:14px;padding:0">Tap any that apply. All start unselected — nothing is assumed.</p>
+     <div class="toggles" id="meds">${medical.map((m,i)=>`<button class="toggle" type="button" data-i="${i}" aria-pressed="${medState[i]?"true":"false"}">${m}</button>`).join("")}</div>
+     <p class="hint">A yes opens a short follow-up in a live form. Press Enter to continue.</p>`,
+
+    `<p class="kicker">Step 6 of 7</p><h1>Candidate declaration</h1>
+     <div class="legal"><p>I declare that the information I have given is true and complete, and I agree to notify Only Quality People if my circumstances change.</p></div>
+     <label class="agree"><input type="checkbox" data-ag="0" ${agreed[0]?"checked":""}> I agree to the Privacy Policy</label>
+     <label class="agree"><input type="checkbox" data-ag="1" ${agreed[1]?"checked":""}> I agree to the Workplace Health and Safety Policy</label>
+     <label class="agree"><input type="checkbox" data-ag="2" ${agreed[2]?"checked":""}> I agree to my information being shared with a host site for a placement</label>
+     <p class="hint">Tick all three to continue, or press Enter when they are complete.</p>`,
+
+    `<p class="kicker">Step 7 of 7</p><h1>Payroll pack</h1>
+     <div class="grid">
+       ${field("Tax file number declaration","Pre-filled from personal details","span")}
+       ${field("Superannuation fund","Ready to choose")}
+       ${field("Member number","—")}
+       ${field("Bank account","•••• 4321")}
+       ${field("Account name","Sam Taylor")}
+     </div>
+     <p class="hint">${spark} · Pre-fills the TFN declaration from personal details already entered. Press Enter to finish.</p>`
+  ];
+}
+
+function fieldsComplete(panel){
+  if(step===4) return true; // medical optional
+  if(step===3) return true; // documents reviewed; one flagged
+  if(step===5) return agreed.every(Boolean);
+  const ins=[...panel.querySelectorAll("input[data-req]")];
+  if(!ins.length) return true;
+  return ins.every(i=>i.value.trim().length>0);
+}
+
+function goNext(){
+  if(step<STEPS.length-1){ step++; render(); }
+  else { window.location.href="admin.html"; }
+}
+
+function scheduleAdvance(){
+  clearTimeout(autoTimer);
+  const panel=document.getElementById("panel");
+  if(!fieldsComplete(panel)) return;
+  if(step===3 || step===4) return; // review steps: Enter only, so the tiles can be read
+  autoTimer=setTimeout(goNext, 700);
+}
+
+function render(){
+  const st=document.getElementById("stepper");
+  st.innerHTML = STEPS.map((s,i)=>`<button type="button" class="${i===step?"on":""} ${i<step?"done":""}" data-s="${i}">${i+1} ${s}</button>`).join("");
+  st.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{step=+b.dataset.s; render();}));
+  const panel=document.getElementById("panel");
+  panel.innerHTML = views()[step];
+  panel.querySelectorAll("input[type=text]").forEach(inp=>{
+    inp.addEventListener("input", scheduleAdvance);
+    inp.addEventListener("keydown", e=>{
+      if(e.key==="Enter"){ e.preventDefault(); if(fieldsComplete(panel)) goNext(); }
+    });
+  });
+  panel.querySelectorAll(".toggle").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const i=+btn.dataset.i;
+      medState[i]=!medState[i];
+      btn.setAttribute("aria-pressed", medState[i]?"true":"false");
+    });
+  });
+  panel.querySelectorAll("input[data-ag]").forEach(box=>{
+    box.addEventListener("change",()=>{
+      agreed[+box.dataset.ag]=box.checked;
+      scheduleAdvance();
+    });
+  });
+  document.onkeydown = (e)=>{
+    if(e.key!=="Enter") return;
+    if(e.target && e.target.tagName==="INPUT" && e.target.type==="text") return;
+    if(fieldsComplete(panel)){ e.preventDefault(); goNext(); }
+  };
+}
+render();
+</script>
+</body>
+</html>

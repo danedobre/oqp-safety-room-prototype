@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Induction desk · Only Quality People</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+body{color:var(--ink)}
+.page{max-width:1520px;margin:0 auto;padding:16px 28px 16px;min-height:100dvh;display:flex;flex-direction:column}
+.titles{display:flex;flex-direction:column;justify-content:flex-end}
+.page > .credit{padding:10px 0 0}
+.titles h1{margin:0;font-size:26px;letter-spacing:-.04em;color:var(--ink);font-weight:750}
+.titles p{margin:3px 0 0;color:var(--muted);font-size:13.5px;font-weight:500}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 10px}
+.tag i{width:7px;height:7px;border-radius:50%;background:var(--blue);display:inline-block}
+.header-left{display:flex;align-items:flex-end;gap:22px}
+
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:14px}
+.kpi{background:#fff;border-radius:18px;padding:16px 18px;box-shadow:var(--shadow-soft)}
+.kpi .n{font-size:36px;font-weight:750;letter-spacing:-.05em;color:var(--ink);line-height:1}
+.kpi .n small{font-size:16px;font-weight:600;margin-left:.2em;color:var(--muted)}
+.kpi .l{margin-top:8px;font-size:13px;font-weight:650;color:var(--muted)}
+.kpi .d{margin-top:4px;font-size:12px;color:#8a93a0}
+
+.grid{display:grid;grid-template-columns:1.35fr .85fr;gap:12px;margin-bottom:12px;align-items:stretch}
+.lower{display:grid;grid-template-columns:1.25fr .85fr;gap:12px;margin-bottom:8px;align-items:stretch;flex:1}
+.stack{display:grid;gap:12px;align-content:start}
+.card{background:#fff;border-radius:18px;padding:16px 20px 16px;box-shadow:var(--shadow-soft);display:flex;flex-direction:column;min-height:0}
+.card h2{margin:0 0 2px;font-size:16px;letter-spacing:-.02em;color:var(--ink)}
+.card .cap{margin:0 0 12px;font-size:12.5px;color:var(--muted);font-weight:500}
+
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin:0 0 8px;font-size:12px;font-weight:650;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:6px}
+.sw{width:10px;height:10px;border-radius:2px;display:inline-block}
+.chart-wrap{position:relative;flex:1;min-height:240px}
+.chart{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tip{position:absolute;background:var(--ink);color:#fff;font-size:12px;font-weight:600;line-height:1.4;padding:8px 10px;border-radius:8px;pointer-events:none;opacity:0;transform:translate(-50%,-120%);transition:opacity .12s ease;white-space:nowrap;z-index:4}
+.tip.on{opacity:1}
+.hot{cursor:pointer}
+
+.fill-bars{display:flex;flex-direction:column;justify-content:space-evenly;flex:1;min-height:140px}
+.bar-row{display:grid;grid-template-columns:150px 1fr 48px;gap:10px;align-items:center;margin:0;font-size:13px;font-weight:600;color:var(--ink)}
+.bar-track{height:10px;background:var(--paper-2);border-radius:99px;overflow:hidden}
+.bar-fill{height:100%;border-radius:99px;background:var(--blue)}
+.hard .bar-row{grid-template-columns:1fr 52px;position:relative;margin:0 0 10px;cursor:default}
+.qtip{position:absolute;left:0;bottom:calc(100% + 6px);background:var(--ink);color:#fff;font-size:12px;font-weight:500;line-height:1.4;padding:8px 10px;border-radius:8px;width:max(240px,100%);max-width:360px;opacity:0;pointer-events:none;transform:translateY(4px);transition:opacity .15s ease, transform .15s ease;z-index:3}
+.hard .bar-row:hover .qtip,.hard .bar-row:focus-within .qtip{opacity:1;transform:none}
+
+.due{display:grid;gap:0}
+.due .row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:8px 0;border-top:1px solid var(--line);font-size:13.5px}
+.due .row:first-child{border-top:0}
+.due strong{display:block;color:var(--ink);font-weight:700}
+.due .m{color:var(--muted);font-size:12px;font-weight:500}
+
+.qhead{display:grid;grid-template-columns:1.3fr 1.1fr .7fr .6fr .9fr 16px;gap:12px;padding:0 4px 8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.qrow{border-top:1px solid var(--line)}
+.qsum{display:grid;grid-template-columns:1.3fr 1.1fr .7fr .6fr .9fr 16px;gap:12px;padding:10px 4px;width:100%;background:none;border:0;text-align:left;cursor:pointer;font:inherit;color:inherit;align-items:center}
+.qsum:hover{background:var(--blue-mist)}
+.qsum .name{font-weight:700;color:var(--ink)}
+.qsum .sub{display:block;font-size:12px;color:var(--muted);font-weight:500}
+.chev{transition:transform .2s ease;color:var(--muted)}
+.qrow.open .chev{transform:rotate(180deg)}
+.qbody{display:none;padding:0 4px 14px 4px;background:var(--blue-mist)}
+.qrow.open .qbody{display:block}
+.detail{display:grid;grid-template-columns:1.3fr .9fr auto;gap:18px;align-items:start;padding:10px 8px}
+.detail h3{margin:0 0 8px;font-size:13px;color:var(--ink)}
+.acks{margin:0;padding:0;list-style:none;display:grid;gap:8px;font-size:13.5px;line-height:1.45}
+.acks li{padding:8px 0;border-top:1px solid var(--line)}
+.acks li:first-child{border-top:0}
+.sigthumb{width:160px;height:64px;background:#fff;border:1px solid var(--line);border-radius:10px;display:block}
+.btns{display:flex;flex-direction:column;gap:8px}
+.btns button{appearance:none;border:0;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer;font-size:13px}
+.btns .yes{background:var(--blue);color:#fff}
+.btns .no{background:#fff;color:var(--ink);border:1px solid var(--line)}
+@media(max-height:960px){
+  .page{padding:10px 24px 8px}
+  .kpis{margin-bottom:10px;gap:10px}
+  .kpi{padding:12px 14px}
+  .kpi .n{font-size:30px}
+  .kpi .l{margin-top:6px}
+  .chart-wrap{min-height:160px;height:160px;max-height:160px}
+  .fill-bars{min-height:0;justify-content:center;gap:18px}
+  .grid{margin-bottom:10px}
+  .card{padding:12px 16px}
+  .card .cap{margin:0 0 8px}
+  .qsum{padding:8px 4px}
+  .qbody{padding:0 4px 10px}
+  .detail{padding:6px 6px;gap:12px}
+  .acks{gap:4px;font-size:12.5px;line-height:1.4}
+  .acks li{padding:5px 0}
+  .sigthumb{width:140px;height:48px}
+  .btns button{padding:8px 12px}
+  .due .row{padding:6px 0}
+}
+@media(max-width:1100px){
+  .kpis{grid-template-columns:repeat(3,1fr)}
+  .grid,.lower{grid-template-columns:1fr}
+  .qhead,.qsum{grid-template-columns:1.2fr 1fr .8fr 16px}
+  .qhead span:nth-child(3),.qhead span:nth-child(4),
+  .qsum span:nth-child(3),.qsum span:nth-child(4){display:none}
+  .detail{grid-template-columns:1fr}
+  .page{padding:16px 16px 32px}
+}
+</style>
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="header-left">
+        <a class="logo" href="index.html" aria-label="onlyqualitypeople">
+          <span class="logo-mark">oqp</span>
+          <span class="logo-word">only<b>quality</b>people.</span>
+        </a>
+        <div class="titles">
+          <h1>Induction desk</h1>
+          <p>November 2026 · Australia/Sydney</p>
+        </div>
+      </div>
+      <div class="aside">
+        <span class="tag"><i></i> Sample data</span>
+        <a class="nav-link" href="index.html">All views</a>
+      </div>
+    </header>
+
+    <section class="kpis" aria-label="This month">
+      <article class="kpi"><div class="n">47</div><div class="l">Completed this month</div><div class="d">Safety Essentials, Manual Handling, Induction</div></article>
+      <article class="kpi"><div class="n">68<small>%</small></div><div class="l">Pass first attempt</div><div class="d">100 % first go, no acknowledgements</div></article>
+      <article class="kpi"><div class="n">23.4 <small>/ 26</small></div><div class="l">Average score</div><div class="d">Parts A and B</div></article>
+      <article class="kpi"><div class="n">12<small> min</small></div><div class="l">Average completion time</div><div class="d">Read, assess, declare</div></article>
+      <article class="kpi"><div class="n">5</div><div class="l">Awaiting review</div><div class="d">Replaces the office-use box</div></article>
+    </section>
+
+    <div class="grid">
+      <article class="card" id="chartCard">
+        <h2>Completions per week</h2>
+        <p class="cap">Last eight weeks, by form</p>
+        <div class="legend">
+          <span><i class="sw" style="background:#0048B2"></i>Safety Essentials</span>
+          <span><i class="sw" style="background:#5B8DEF"></i>Manual Handling</span>
+          <span><i class="sw" style="background:#9AAFCF"></i>Induction</span>
+        </div>
+        <div class="chart-wrap">
+          <div class="tip" id="chartTip"></div>
+          <svg class="chart" id="weekChart" viewBox="0 0 640 240" preserveAspectRatio="none" role="img" aria-label="Weekly completions for three forms"></svg>
+        </div>
+      </article>
+      <article class="card">
+        <h2>First-attempt pass rate</h2>
+        <p class="cap">Share who scored 100 % on the first go, by form</p>
+        <div class="fill-bars">
+        <div class="bar-row"><span>Safety Essentials</span><div class="bar-track"><div class="bar-fill" style="width:71%"></div></div><span>71 %</span></div>
+        <div class="bar-row"><span>Manual Handling</span><div class="bar-track"><div class="bar-fill" style="width:64%;background:#5B8DEF"></div></div><span>64 %</span></div>
+        <div class="bar-row"><span>Induction</span><div class="bar-track"><div class="bar-fill" style="width:83%;background:#9AAFCF"></div></div><span>83 %</span></div>
+        </div>
+      </article>
+    </div>
+
+    <div class="lower">
+      <article class="card queue">
+        <div style="padding:0 0 6px">
+          <h2>Review queue</h2>
+          <p class="cap" style="margin:0">Recent submissions. Open a row in place of the Internal Office Use box.</p>
+        </div>
+        <div class="qhead"><span>Candidate</span><span>Site / role</span><span>Score</span><span>Attempts</span><span>Status</span><span></span></div>
+
+        <div class="qrow open" id="row1">
+          <button class="qsum" type="button" aria-expanded="true">
+            <span><span class="name">Sam Taylor</span><span class="sub">Submitted today, 2:14 pm</span></span>
+            <span>Woolworths DC Wacol<br><span class="sub">Warehouse operative</span></span>
+            <span>24 / 26</span>
+            <span>1</span>
+            <span><span class="chip wait">Awaiting review</span></span>
+            <span class="chev">▾</span>
+          </button>
+          <div class="qbody">
+            <div class="detail">
+              <div>
+                <h3>Acknowledged mistakes</h3>
+                <ul class="acks">
+                  <li><strong>A6.</strong> Chose True for “Forklift operators can always see pedestrians around them.” Correct: False. Remain alert around mobile plant.</li>
+                  <li><strong>A12.</strong> Chose True for “It is acceptable to take shortcuts if they help complete the job faster.” Correct: False. No shortcut is ever more important than safety.</li>
+                </ul>
+                <p class="cap" style="margin-top:10px">Manual handling 6 / 6 · Induction read and declared.</p>
+              </div>
+              <div>
+                <h3>Signature</h3>
+                <svg class="sigthumb" viewBox="0 0 160 64" aria-label="Signature of Sam Taylor">
+                  <path d="M12 40 C 28 20, 40 52, 55 34 S 78 18, 96 36 124 22, 148 28" fill="none" stroke="#0048B2" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <p class="cap" style="margin-top:8px">Signed 19 Nov 2026</p>
+              </div>
+              <div class="btns">
+                <button class="yes" type="button" id="approve">Approve as Competent</button>
+                <button class="no" type="button" id="train">Request training</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="qrow">
+          <button class="qsum" type="button" aria-expanded="false">
+            <span><span class="name">Mei Tan</span><span class="sub">Submitted today, 11:06 am</span></span>
+            <span>Linfox Archerfield<br><span class="sub">Picker packer</span></span>
+            <span>26 / 26</span>
+            <span>1</span>
+            <span><span class="chip wait">Awaiting review</span></span>
+            <span class="chev">▾</span>
+          </button>
+          <div class="qbody"><p class="cap" style="padding:4px 0 8px">All 26 assessment questions and 6 manual handling checks correct. No acknowledgements.</p></div>
+        </div>
+        <div class="qrow">
+          <button class="qsum" type="button" aria-expanded="false">
+            <span><span class="name">James O’Connor</span><span class="sub">18 Nov, 4:32 pm</span></span>
+            <span>Amazon Heathwood<br><span class="sub">Dock attendant</span></span>
+            <span>21 / 26</span>
+            <span>2</span>
+            <span><span class="chip warn">Needs training</span></span>
+            <span class="chev">▾</span>
+          </button>
+        </div>
+        <div class="qrow">
+          <button class="qsum" type="button" aria-expanded="false">
+            <span><span class="name">Fatima Zahra</span><span class="sub">18 Nov, 1:10 pm</span></span>
+            <span>Port of Brisbane<br><span class="sub">Process worker</span></span>
+            <span>26 / 26</span>
+            <span>1</span>
+            <span><span class="chip ok">Competent</span></span>
+            <span class="chev">▾</span>
+          </button>
+        </div>
+      </article>
+
+      <div class="stack">
+        <article class="card hard">
+          <h2>Hardest questions</h2>
+          <p class="cap">Most often answered wrong, then acknowledged. Hover a bar for the wording.</p>
+          <div class="bar-row" tabindex="0">
+            <div>
+              <div class="qtip">“Forklift operators can always see pedestrians around them.” Correct answer: False.</div>
+              <div class="bar-track"><div class="bar-fill" style="width:41%"></div></div>
+              <div style="margin-top:4px;font-size:12px;color:var(--muted);font-weight:500">A6 · Forklift operators and pedestrians</div>
+            </div>
+            <span>41 %</span>
+          </div>
+          <div class="bar-row" tabindex="0">
+            <div>
+              <div class="qtip">“It is acceptable to take shortcuts if they help complete the job faster.” Correct answer: False.</div>
+              <div class="bar-track"><div class="bar-fill" style="width:33%"></div></div>
+              <div style="margin-top:4px;font-size:12px;color:var(--muted);font-weight:500">A12 · Shortcuts to finish faster</div>
+            </div>
+            <span>33 %</span>
+          </div>
+          <div class="bar-row" tabindex="0">
+            <div>
+              <div class="qtip">“What is the main purpose of Personal Protective Equipment (PPE)?” Correct answer: To reduce injury risk when hazards cannot be eliminated.</div>
+              <div class="bar-track"><div class="bar-fill" style="width:29%"></div></div>
+              <div style="margin-top:4px;font-size:12px;color:var(--muted);font-weight:500">B9 · Purpose of PPE</div>
+            </div>
+            <span>29 %</span>
+          </div>
+          <div class="bar-row" tabindex="0">
+            <div>
+              <div class="qtip">“I should twist my back while carrying a load if it saves time.” Correct answer: False.</div>
+              <div class="bar-track"><div class="bar-fill" style="width:27%"></div></div>
+              <div style="margin-top:4px;font-size:12px;color:var(--muted);font-weight:500">M3 · Twisting while carrying</div>
+            </div>
+            <span>27 %</span>
+          </div>
+        </article>
+        <article class="card">
+          <h2>Refreshers due</h2>
+          <p class="cap">Tickets and inductions expiring in the next 60 days</p>
+          <div class="due">
+            <div class="row"><div><strong>Liam Barrett</strong><span class="m">Forklift LF · Visy Smithfield</span></div><span class="chip warn">12 days</span></div>
+            <div class="row"><div><strong>Priya Nair</strong><span class="m">White Card · Amazon Heathwood</span></div><span class="chip warn">19 days</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+    <footer class="credit">Prototype by Grok Bot · Sample data only</footer>
+  </div>
+<script>
+document.querySelectorAll(".qsum").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    const row=btn.parentElement;
+    const open=row.classList.contains("open");
+    document.querySelectorAll(".qrow").forEach(r=>{r.classList.remove("open"); r.querySelector(".qsum").setAttribute("aria-expanded","false")});
+    if(!open){row.classList.add("open"); btn.setAttribute("aria-expanded","true")}
+  });
+});
+const chip=document.querySelector("#row1 .chip");
+document.getElementById("approve").addEventListener("click",()=>{ chip.className="chip ok"; chip.textContent="Competent"; });
+document.getElementById("train").addEventListener("click",()=>{ chip.className="chip warn"; chip.textContent="Needs training"; });
+
+(function(){
+  const labels=["5 Oct","12 Oct","19 Oct","26 Oct","2 Nov","9 Nov","16 Nov","19 Nov"];
+  const series=[
+    {name:"Safety Essentials", color:"#0048B2", values:[5,6,5,8,7,9,11,10]},
+    {name:"Manual Handling", color:"#5B8DEF", values:[2,3,3,4,5,4,6,5]},
+    {name:"Induction", color:"#9AAFCF", values:[1,2,2,3,3,4,4,5]}
+  ];
+  const svg=document.getElementById("weekChart");
+  const tip=document.getElementById("chartTip");
+  const W=640,H=240,padL=44,padR=16,padT=12,padB=32;
+  const maxY=16;
+  const xAt=(i)=> padL + i*((W-padL-padR)/(labels.length-1));
+  const yAt=(v)=> padT + (1-v/maxY)*(H-padT-padB);
+  let g="";
+  // grid + axes
+  for(let v=0;v<=16;v+=4){
+    const y=yAt(v);
+    g+=`<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#E4EAF2" stroke-dasharray="${v===0?"":"3 5"}"/>`;
+    g+=`<text x="${padL-8}" y="${y+4}" text-anchor="end" fill="#8B95A6" font-size="11" font-family="Plus Jakarta Sans, Inter, sans-serif">${v}</text>`;
+  }
+  labels.forEach((lb,i)=>{
+    g+=`<text x="${xAt(i)}" y="${H-8}" text-anchor="middle" fill="#8B95A6" font-size="11" font-family="Plus Jakarta Sans, Inter, sans-serif">${lb}</text>`;
+  });
+  series.forEach(s=>{
+    const pts=s.values.map((v,i)=>`${xAt(i)},${yAt(v)}`).join(" ");
+    g+=`<polyline fill="none" stroke="${s.color}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" points="${pts}"/>`;
+    s.values.forEach((v,i)=>{
+      g+=`<circle class="hot" data-i="${i}" data-s="${s.name}" data-v="${v}" cx="${xAt(i)}" cy="${yAt(v)}" r="8" fill="transparent"/>`;
+      g+=`<circle cx="${xAt(i)}" cy="${yAt(v)}" r="3.5" fill="${s.color}" pointer-events="none"/>`;
+    });
+  });
+  svg.innerHTML=g;
+  const wrap=svg.parentElement;
+  svg.querySelectorAll("circle.hot").forEach(el=>{
+    el.addEventListener("mouseenter",()=>{
+      const i=+el.dataset.i;
+      const bits=series.map(s=>`${s.name}: ${s.values[i]}`).join(" · ");
+      tip.textContent=labels[i]+" — "+bits;
+      const rect=wrap.getBoundingClientRect();
+      const srect=svg.getBoundingClientRect();
+      const cx=el.getAttribute("cx")/W*srect.width + (srect.left-rect.left);
+      const cy=el.getAttribute("cy")/H*srect.height + (srect.top-rect.top);
+      tip.style.left=cx+"px";
+      tip.style.top=cy+"px";
+      tip.classList.add("on");
+    });
+    el.addEventListener("mouseleave",()=>tip.classList.remove("on"));
+  });
+})();
+</script>
+</body>
+</html>

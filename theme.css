@@ -1,0 +1,82 @@
+@font-face{
+  font-family:"Plus Jakarta Sans";
+  src:url("plus-jakarta-sans.woff") format("woff");
+  font-weight:200 800;
+  font-style:normal;
+  font-display:swap;
+}
+:root{
+  --blue:#0048B2;
+  --blue-deep:#003A94;
+  --blue-ink:#002E78;
+  --blue-soft:#E7F0FC;
+  --blue-mist:#F3F7FD;
+  --ink:#152238;
+  --muted:#5A6A80;
+  --paper:#F5F7FB;
+  --paper-2:#E8EEF6;
+  --card:#FFFFFF;
+  --line:#D8E0EC;
+  --ok:#1F7A4D;
+  --ok-bg:#E7F6EE;
+  --ok-ink:#145C39;
+  --bad:#B42318;
+  --bad-bg:#FCECEC;
+  --bad-ink:#8A1A12;
+  --shadow:0 18px 50px rgba(21,34,56,.10), 0 2px 8px rgba(21,34,56,.05);
+  --shadow-soft:0 8px 24px rgba(21,34,56,.07);
+  --radius:24px;
+  --font:"Plus Jakarta Sans", Inter, "Segoe UI", system-ui, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--font);
+  color:var(--ink);
+  background:
+    radial-gradient(900px 520px at 110% -8%, rgba(0,72,178,.12), transparent 55%),
+    radial-gradient(720px 420px at -10% 110%, rgba(0,72,178,.07), transparent 50%),
+    linear-gradient(180deg, #F7F9FC 0%, #EEF2F8 100%);
+  min-height:100dvh;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+button,input,textarea,select{font-family:inherit}
+[hidden]{display:none!important}
+
+/* Logo — sampled from OQP lockup: royal blue block 2.22:1, letters right-weighted, wordmark wider */
+.logo{display:flex;flex-direction:column;align-items:flex-start;gap:5px;text-decoration:none;color:var(--blue);flex:none}
+.logo-mark{
+  display:flex;align-items:center;justify-content:flex-end;
+  width:70px;height:32px;padding:0 6px 1px 0;
+  background:var(--blue);color:#fff;
+  font-weight:700;font-size:20px;letter-spacing:-.07em;line-height:1;
+}
+.logo-word{font-size:16.5px;font-weight:500;letter-spacing:-.055em;line-height:1;color:var(--blue);white-space:nowrap}
+.logo-word b{font-weight:800}
+
+.site-header{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+  width:100%;margin:0 0 28px;
+}
+.site-header .aside{display:flex;align-items:center;gap:16px}
+.site-header a.nav-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:650}
+.site-header a.nav-link:hover{color:var(--ink)}
+
+.btn{
+  appearance:none;border:0;background:var(--blue);color:#fff;border-radius:14px;
+  padding:14px 22px;font-size:16px;font-weight:700;letter-spacing:-.01em;cursor:pointer;
+  transition:transform .15s ease, background .15s ease, opacity .15s ease;
+}
+.btn:hover{background:var(--blue-deep);transform:translateY(-1px)}
+.btn:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.btn:disabled{opacity:.38;cursor:default;transform:none}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.chip{display:inline-flex;align-items:center;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:700;letter-spacing:.01em}
+.chip.ok{background:var(--ok-bg);color:var(--ok-ink)}
+.chip.warn{background:#F8EED9;color:#8A5A12}
+.chip.wait{background:var(--blue-soft);color:var(--blue-ink)}
+.credit{width:100%;margin:0;padding:20px;font-size:11px;color:#8B95A6;letter-spacing:.01em;text-align:center}
+@media(prefers-reduced-motion:reduce){
+  .btn{transition:none}
+}
